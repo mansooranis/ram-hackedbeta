@@ -45,7 +45,7 @@ async def getOne(dbName, id):
     return get_db().cursor().execute(f'select * from {dbName} where id={id};').fetchone()
 
 @app.route('/')
-def hello_world():
+def index():
     return 'Welcome to RAM BACKEND!'
 
 @app.route('/tips/allTips')
@@ -99,7 +99,13 @@ def randomGoal():
 
 @app.route('/goals/suggestedGoals/<int:userID>')
 def suggestedGoal(userID):
-    pass
+    dataValue = asyncio.run(getAll('goals'))
+    randomValue = random.choices(dataValue, k=3)
+    finalList = []
+    for i in randomValue:
+        resultDict = {'id': i[0], 'tip': i[1]}
+        finalList.append(resultDict)
+    return flask.jsonify(finalList)
 
 @app.route('/goals/create')
 def createGoal():
@@ -119,15 +125,17 @@ async def getCurrentUser(userID):
 
 @app.route('/user/get/<string:userID>')
 def getUser(userID):
-    dataValue = asyncio.run(getCurrentUser(userID))
-    resultDict = {'id':dataValue[0], 'userID':dataValue[1]}
-    return flask.jsonify(resultDict)
+    try:
+        dataValue = asyncio.run(getCurrentUser(userID))
+        resultDict = {'id':dataValue[0], 'userID':dataValue[1]}
+        return flask.jsonify(resultDict)
+    except:
+        return "not user exists", 200
 
 @app.route('/user/add', methods=['GET','POST'])
 def addUser():
     if request.method() == 'POST':
         userID = request.json['userID']
-        # TODO : Add the user to the database when the POST request is made
         db_conn = get_db()
         db_conn.cursor().execute(f'insert into users(USERID) values("{userID}");')
         db_conn.commit()
@@ -180,6 +188,33 @@ def machineLearning():
     resultDict = {'emotion':highestEmotion, 'question':newQuestion[2]}
     count += 1
     return flask.jsonify(resultDict)
+
+userIDRegisterd = []
+
+@app.route('/getUserData', method=['POST'])
+def getUserData():
+    global userIDRegisterd
+    if request.method() == 'POST':
+        userID = request.json['userID']
+        db_conn = get_db()
+        if userID not in userIDRegisterd:
+            userIDRegisterd.push(userID)
+            db_conn.cursor().execute(f'create table if not exists {userID}(ID INTEGER PRIMAY KEY AUTOINCREMENT, QUESTION TEXT, ANSWER TEXT);')
+            return "User Added Successfully", 200
+        else:
+            userDBData = asyncio.run(getAll(userID))
+            return flask.jsonify(userDBData)
+    else:
+        return "The Route only accepts POST request", 400
+
+@app.route('/submitUserData/<string:userID>', methods=['POST'])
+def submitUserData():
+    question = request.json['question']
+    answer = request.json['answer']
+    db_conn = get_db()
+    db_conn.cursor().execute(f'insert into {userID} values("{question}", "{answer}");')
+    db_conn.commit()
+    return "Data Added Successfully"
 
 if __name__ == '__main__':
     app.run()
