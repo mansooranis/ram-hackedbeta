@@ -218,6 +218,7 @@ def getUserData():
 
 @app.route('/submitUserData/<string:userID>', methods=['POST'])
 def submitUserData(userID):
+    print(request.json)
     question = request.json['question']
     answer = request.json['answer']
     db_conn = get_db()
