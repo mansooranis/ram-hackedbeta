@@ -37,7 +37,7 @@ We plan on adding more emotions, questions, and a few tips on where you can get 
 healthier life! All based on user inputs.
 
 
-## Backend
+## Backend Routes
 * tips
 [Sample : localhost:5000/tips/allTips]
     (GET)
