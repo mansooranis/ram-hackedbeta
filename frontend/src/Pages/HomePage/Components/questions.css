@@ -1,0 +1,35 @@
+.questopener{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.que{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 23px;
+}
+
+.allque{
+    width: 200px;
+}
+.allquemain{
+    font-size: 22px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+    flex-direction: column;
+}
+.inputbox1{
+    width: 500px;
+    flex-direction: column;
+
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 10px 10px 10px 10px;
+  }
