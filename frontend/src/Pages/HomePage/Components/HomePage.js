@@ -1,7 +1,11 @@
+import SecondComp from "./secondcom";
+import TopIntro from "./topintro";
+
 export default function HomePage(props){
     return(
         <div>
-            Hello my name is {props.name}
+            <TopIntro/>
+            <SecondComp/>
         </div>
     )
 }

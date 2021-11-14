@@ -1,0 +1,30 @@
+.top1intro{
+    background-image: url("./../../../nat.jpg");
+    height: 700px;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.getstarted{
+    height: 300px;
+    width: 500px;
+    background-color: #f0f8ff;
+    border-radius: 25px;
+    border: solid;
+    border-width: 0.5px;
+    opacity: 0.28;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+.textintro{
+    display: flex;
+    font-size: 40px;
+    font-weight:bolder;
+    color: #000407;
+}
