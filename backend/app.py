@@ -6,6 +6,7 @@ import sqlite3
 from flask import g
 from flask import render_template
 from flask import redirect
+from flask_cors import CORS
 import os
 import asyncio
 import platform
@@ -25,6 +26,7 @@ if system == 'Darwin':
 DATABASE = path
 
 app = Flask(__name__)
+CORS(app)
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -170,36 +172,43 @@ def addQuestion():
     if request.method == 'POST':
         day = request.form['day']
         question = request.form['question']
+        emotion = request.form['emotion']
         db_conn = get_db()
-        db_conn.cursor().execute(f'insert into questions(DAY, QUESTION) values("{day}", "{question}");')
+        db_conn.cursor().execute(f'insert into questions(DAY, QUESTION, EMOTION) values("{day}", "{question}", "{emotion}");')
         db_conn.commit()
         return redirect('/questions/create')
 
-count = 1
+async def getlastUserInput(userID):
+    return get_db().cursor().execute(f'select * from {userID} where ID=(select max(ID) from {userID});').fetchone()
 
-@app.route('/machineLearning', methods=['POST'])
-def machineLearning():
-    global count
-    userData = request.json['userData']
-    highestEmotion = asyncio.run(userDataProcessed(userData))
-    newQuestion = asyncio.run(getOne('questions', count))
-    if count == len(asyncio.run(getAll('questions'))):
-        count = 1
-    resultDict = {'emotion':highestEmotion, 'question':newQuestion[2]}
-    count += 1
+async def getOneSpecQuestion(highestEmotion):
+    return get_db().cursor().execute(f'select * from questions where EMOTION="{highestEmotion}";').fetchone()
+
+@app.route('/machineLearning/<string:userID>')
+def machineLearning(userID):
+    getLastUserInput = asyncio.run(getlastUserInput(userID))
+    highestEmotion = asyncio.run(userDataProcessed(getLastUserInput[2]))
+    db_conn = get_db()
+    db_conn.cursor().execute(f'update {userID} set EMOTION="{highestEmotion}" where id={getLastUserInput[0]};')
+    db_conn.commit()
+    newQuestion = asyncio.run(getOneSpecQuestion(highestEmotion))
+    resultDict = {'question': newQuestion[2]}
     return flask.jsonify(resultDict)
 
-userIDRegisterd = []
-
-@app.route('/getUserData', method=['POST'])
+@app.route('/getUserData', methods=['POST'])
 def getUserData():
-    global userIDRegisterd
-    if request.method() == 'POST':
+    if request.method == 'POST':
         userID = request.json['userID']
         db_conn = get_db()
+        users = asyncio.run(getAll('users'))
+        userIDRegisterd = []
+        for i in range(len(users)):
+            userIDRegisterd.append(users[i][1])
         if userID not in userIDRegisterd:
-            userIDRegisterd.push(userID)
-            db_conn.cursor().execute(f'create table if not exists {userID}(ID INTEGER PRIMAY KEY AUTOINCREMENT, QUESTION TEXT, ANSWER TEXT);')
+            userIDRegisterd.append(userID)
+            db_conn.cursor().execute(f'create table if not exists {userID}(ID INTEGER PRIMARY KEY AUTOINCREMENT, QUESTION TEXT, ANSWER TEXT, EMOTION TEXT);')
+            db_conn.cursor().execute(f'insert into users(USERID) values("{userID}");')
+            db_conn.commit()
             return "User Added Successfully", 200
         else:
             userDBData = asyncio.run(getAll(userID))
@@ -208,13 +217,22 @@ def getUserData():
         return "The Route only accepts POST request", 400
 
 @app.route('/submitUserData/<string:userID>', methods=['POST'])
-def submitUserData():
+def submitUserData(userID):
     question = request.json['question']
     answer = request.json['answer']
     db_conn = get_db()
-    db_conn.cursor().execute(f'insert into {userID} values("{question}", "{answer}");')
+    db_conn.cursor().execute(f'insert into {userID}(QUESTION, ANSWER, EMOTION) values("{question}", "{answer}", "");')
     db_conn.commit()
     return "Data Added Successfully"
+
+@app.route('/finalResult/<string:userID>')
+def finalResult(userID):
+    allTableVal = asyncio.run(getAll(userID))
+    finalList = []
+    for i in range(len(allTableVal)):
+        newDict = {"id":allTableVal[i][0], "emotion":allTableVal[i][3]}
+        finalList.append(newDict)
+    return flask.jsonify(finalList)
 
 if __name__ == '__main__':
     app.run()

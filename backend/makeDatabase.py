@@ -32,7 +32,7 @@ cur = con.cursor()
 con.execute("create table if not exists tips(ID INTEGER PRIMARY KEY AUTOINCREMENT, TIP TEXT);")
 con.execute("create table if not exists goals(ID INTEGER PRIMARY KEY AUTOINCREMENT, GOAL TEXT);")
 con.execute("create table if not exists users(ID INTEGER PRIMARY KEY AUTOINCREMENT, USERID VARCHAR(20));")
-con.execute("create table if not exists questions(ID INTEGER PRIMARY KEY AUTOINCREMENT, DAY INTEGER, QUESTION TEXT);")
+con.execute("create table if not exists questions(ID INTEGER PRIMARY KEY AUTOINCREMENT, DAY INTEGER, QUESTION TEXT, EMOTIONS TEXT);")
 
 cur.close()
 print("Tables created Successfully")
