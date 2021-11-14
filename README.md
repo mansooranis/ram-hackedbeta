@@ -27,8 +27,10 @@ We're proud of being able to make a self-learning algorithm that can detect the 
 choose the question that best suits a person's mood.
  
 ## What we learned
-We learned that everyone in our team should use their strengths and expertise to make the project successfully realized. 
-Some of us are first contact with machine learning and web production. We are proud that we can produce such a project, but also 
+We learnt how to make the most out of everyones strengths and weaknesses to successfully realize the project. 
+As it was our first time machine learning and web development, some of us learnt how to incorporate machine learning 
+in an efficient manner, while others learnt how to create a complex web interface for users to interact with. 
+We are proud that we could produce such a project while realizing how important it is to never stop learning. 
 
 ## What's next for HelpIt?
 We plan on adding more emotions, questions, and a few tips on where you can get started to lead a 
@@ -39,39 +41,39 @@ healthier life! All based on user inputs.
 * tips
 [Sample : localhost:5000/tips/allTips]
     (GET)
-    > allTips - Retuns all the tips in the Database 
-    > oneTip/<int:id> - Returns a particular tip based on the id value passed
-    > randomTip - Returns a random tip from the Database
-    > create - Returns a HTML webpage that can be used to add data to the database
+    * allTips - Retuns all the tips in the Database 
+    * oneTip/<int:id> - Returns a particular tip based on the id value passed
+    * randomTip - Returns a random tip from the Database
+    * create - Returns a HTML webpage that can be used to add data to the database
     (POST)
-    > create/process - only accepts post request to add data (do not use this) (Internal use only)
+    * create/process - only accepts post request to add data (do not use this) (Internal use only)
 
 * goals
 [Sample : localhost:5000/goals/allGoals]
     (GET)
-    > allGoals - Returns all the goals in the database
-    > oneGoal/<int:id> - Returns a particular goal based on the id value passed
-    > randomGoal - Returns a random goal from the database
-    > suggestedGoals/<string:userID> - Returns suggestedGoals based on the user prefered categories. 
+    * allGoals - Returns all the goals in the database
+    * oneGoal/<int:id> - Returns a particular goal based on the id value passed
+    * randomGoal - Returns a random goal from the database
+    * suggestedGoals/<string:userID> - Returns suggestedGoals based on the user prefered categories. 
                                	       userID is the unique ID given to user when adding to database
-    > create - Returns a HTML webpage that can be used to add data to the database
+    * create - Returns a HTML webpage that can be used to add data to the database
     (POST)
-    > create/process - only accepts post request to add data (do not use this) (Internal use only)
+    * create/process - only accepts post request to add data (do not use this) (Internal use only)
 
 * question
     (GET)
-    > allQuestions - Retuns all the questions in the Database 
-    > oneQuestion/<int:id> - Returns a particular question based on the day value passed
-    > randomQuestion - Returns a random tip from the Database
-    > create - Returns a HTML webpage that can be used to add data to the database
+    * allQuestions - Retuns all the questions in the Database 
+    * oneQuestion/<int:id> - Returns a particular question based on the day value passed
+    * randomQuestion - Returns a random tip from the Database
+    * create - Returns a HTML webpage that can be used to add data to the database
     (POST)
-    > create/process - only accepts post request to add data (do not use this) (Internal use only)
+    * create/process - only accepts post request to add data (do not use this) (Internal use only)
 
 * user
     (GET)
-    > get/<string:userID> - Get the user from the Database
+    * get/<string:userID> - Get the user from the Database
     (POST)
-    > add/ - accepts POST request and submit userInfo to Database
+    * add/ - accepts POST request and submit userInfo to Database
 
 * getUserData (POST)
 	Receives the Username and the password as POST request. If the user exists in the database
