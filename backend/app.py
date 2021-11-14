@@ -9,6 +9,8 @@ from flask import redirect
 import os
 import asyncio
 import platform
+import random
+from machineLearning import userDataProcessed
 
 path = ''
 system = platform.system()
@@ -44,7 +46,7 @@ async def getOne(dbName, id):
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return 'Welcome to RAM BACKEND!'
 
 @app.route('/tips/allTips')
 def allTips():
@@ -59,7 +61,10 @@ def oneTip(id):
 
 @app.route('/tips/randomTip')
 def randomTip():
-    pass
+    dataValue = asyncio.run(getAll('tips'))
+    randomValue = random.choice(dataValue)
+    resultDict = {'id':randomValue[0], 'tip':randomValue[1]}
+    return flask.jsonify(resultDict)
 
 @app.route('/tips/create')
 def createTip():
@@ -87,7 +92,10 @@ def oneGoal(id):
 
 @app.route('/goals/randomGoal')
 def randomGoal():
-    pass
+    dataValue = asyncio.run(getAll('goals'))
+    randomValue = random.choice(dataValue)
+    resultDict = {'id': randomValue[0], 'tip': randomValue[1]}
+    return flask.jsonify(resultDict)
 
 @app.route('/goals/suggestedGoals/<int:userID>')
 def suggestedGoal(userID):
@@ -106,19 +114,26 @@ def addGoal():
         db_conn.commit()
         return redirect('/goals/create')
 
-@app.route('/user/get/<int:userID>')
+async def getCurrentUser(userID):
+    return get_db().cursor().execute(f'select * from users where USERID="{userID}";').fetchone()
+
+@app.route('/user/get/<string:userID>')
 def getUser(userID):
-    # TODO : Get the user from the Database and return it in JSON format
-    pass
+    dataValue = asyncio.run(getCurrentUser(userID))
+    resultDict = {'id':dataValue[0], 'userID':dataValue[1]}
+    return flask.jsonify(resultDict)
 
 @app.route('/user/add', methods=['GET','POST'])
 def addUser():
     if request.method() == 'POST':
         userID = request.json['userID']
         # TODO : Add the user to the database when the POST request is made
-        return
+        db_conn = get_db()
+        db_conn.cursor().execute(f'insert into users(USERID) values("{userID}");')
+        db_conn.commit()
+        return "User added Successfully", 200
     else:
-        return
+        return "The Route only accepts POST request", 400
 
 @app.route('/questions/allQuestions')
 def allQuestions():
@@ -133,7 +148,10 @@ def oneQuestion(id):
 
 @app.route('/questions/randomQuestion')
 def randomQuestion():
-    pass
+    dataValue = asyncio.run(getAll('questions'))
+    randomValue = random.choice(dataValue)
+    resultDict = {'id': randomValue[0], 'tip': randomValue[2]}
+    return flask.jsonify(resultDict)
 
 @app.route('/questions/create')
 def createQuestion():
@@ -148,6 +166,12 @@ def addQuestion():
         db_conn.cursor().execute(f'insert into questions(DAY, QUESTION) values("{day}", "{question}");')
         db_conn.commit()
         return redirect('/questions/create')
+
+@app.route('/machineLearning', methods=['POST'])
+def machineLearning():
+    userData = request.json['userData']
+    feelingValues = asyncio.run(userDataProcessed(userData))
+    return feelingValues
 
 if __name__ == '__main__':
     app.run()
