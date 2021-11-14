@@ -1,0 +1,36 @@
+.second2comp{
+    background-color: azure;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    flex-direction: column;
+}
+.uniqueid{
+    height: 200px;
+    width: 500px;
+    border: solid;
+    border-width: 0.5px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: beige;
+}
+.iddddd{
+    width:450px
+}
+.questionsss{
+    width: 250px;
+}
+
+.root-sec{
+    background-color: azure;
+}
+.center-this-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
