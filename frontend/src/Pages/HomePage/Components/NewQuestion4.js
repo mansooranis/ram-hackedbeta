@@ -10,6 +10,7 @@ export default function NewQuestion4 (props){
     const [queeeee, setqueeee]  = useState(cookies.get("question3"))
     const [whatisthea, setWhatisthea] = useState(false)
     const [question6, setQuestion6] = useState(false)
+    var alldata;
     const questionsubmitted = () => {
         axios.post(url+"submitUserData/"+cookies.get("userID"),{
             question:queeeee,
@@ -19,7 +20,13 @@ export default function NewQuestion4 (props){
                 function (res){
                     setqueeee(res["data"]["question"])
                     cookies.set('question5', res["data"]["question"], { path: '/' });
+                    axios.get(url+"finalResult/"+cookies.get("userID")).then(
+                        function (res){
+                            cookies.set("alldata",res["data"])
+                        }
+                    )
                     setQuestion6(true)
+                    console.log(cookies.get("alldata"))
                 }
             )
         })
@@ -36,6 +43,38 @@ export default function NewQuestion4 (props){
                 <br/>
                 <Button onClick={questionsubmitted}>Submit</Button>
             </div>
+            {question6?<div>
+                <div>
+                    <br/>
+                    <table>
+                        <tr>
+                            <th>Question</th>
+                            <th>Emotion</th>
+                        </tr>
+                        <tr>
+                            <td>{cookies.get("alldata")[0]["id"]}</td>
+                            <td>{cookies.get("alldata")[0]["emotion"]}</td>
+                        </tr>
+                        <tr>
+                            <td>{cookies.get("alldata")[1]["id"]}</td>
+                            <td>{cookies.get("alldata")[1]["emotion"]}</td>
+                        </tr>
+                        <tr>
+                            <td>{cookies.get("alldata")[2]["id"]}</td>
+                            <td>{cookies.get("alldata")[2]["emotion"]}</td>
+                        </tr>
+                        <tr>
+                            <td>{cookies.get("alldata")[3]["id"]}</td>
+                            <td>{cookies.get("alldata")[3]["emotion"]}</td>
+                        </tr>
+                        <tr>
+                            <td>{cookies.get("alldata")[4]["id"]}</td>
+                            <td>{cookies.get("alldata")[4]["emotion"]}</td>
+                        </tr>
+                    </table>
+                    <br/>
+                </div>
+            </div>:<div></div>}
         </div>
     )
 }
