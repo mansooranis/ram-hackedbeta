@@ -167,11 +167,19 @@ def addQuestion():
         db_conn.commit()
         return redirect('/questions/create')
 
+count = 1
+
 @app.route('/machineLearning', methods=['POST'])
 def machineLearning():
+    global count
     userData = request.json['userData']
-    feelingValues = asyncio.run(userDataProcessed(userData))
-    return feelingValues
+    highestEmotion = asyncio.run(userDataProcessed(userData))
+    newQuestion = asyncio.run(getOne('questions', count))
+    if count == len(asyncio.run(getAll('questions'))):
+        count = 1
+    resultDict = {'emotion':highestEmotion, 'question':newQuestion[2]}
+    count += 1
+    return flask.jsonify(resultDict)
 
 if __name__ == '__main__':
     app.run()
