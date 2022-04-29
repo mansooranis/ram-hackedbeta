@@ -1,4 +1,4 @@
-# HELPIT
+# HEALTH BETA
 
 ## Inspiration
 Since we are nearing the end of mental health week, we felt that mental health is such an important topic with 
